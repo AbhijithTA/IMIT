@@ -1,14 +1,24 @@
 /* eslint-disable react/prop-types */
-import  { useContext, useState } from "react";
+import  { useContext, useMemo, useState } from "react";
 import api from "../config/api";
 import { AuthContext } from "../context/AuthContext";
 import avatar from "../assets/avatar.jpg";
+import avatar1 from "../assets/avatar2.jpg";
+import avatar2 from "../assets/avatar3.jpg";
+
 
 const PostCard = ({ post }) => {
   const { user } = useContext(AuthContext);
   const [likes, setLikes] = useState(post.likes.length);
   const [comments, setComments] = useState(post.comments);
   const [newComment, setNewComment] = useState("");
+
+
+  const avatars = [avatar, avatar1, avatar2];
+
+  const randomAvatar = useMemo(() =>{
+    return avatars[Math.floor(Math.random() * avatars.length)];
+  },[post.user._id])
 
   const handleLike = async () => {
     try {
@@ -47,13 +57,12 @@ const PostCard = ({ post }) => {
     }
   };
 
-  console.log(post);
-
+ 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src={avatar} alt="user avatar" className="w-10 h-10 rounded-full" />
+          <img src={randomAvatar} alt="user avatar" className="w-10 h-10 rounded-full" />
           <div>
             <h3 className="font-semibold">{post.user.username}</h3>
             <p className="text-gray-500 text-sm">{new Date(post.createdAt).toLocaleDateString()}</p>
@@ -94,7 +103,7 @@ const PostCard = ({ post }) => {
       <div className="space-y-4">
         {comments.map((comment) => (
           <div key={comment._id} className="flex items-center gap-2">
-            <img src={avatar} alt="user avatar" className="w-8 h-8 rounded-full" />
+            <img src={randomAvatar} alt="user avatar" className="w-8 h-8 rounded-full" />
             <div>
               <p className="text-sm font-semibold">{comment.user.username}</p>
               <p className="text-sm text-gray-600">{comment.text}</p>
